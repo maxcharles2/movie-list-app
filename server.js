@@ -33,8 +33,8 @@ require('./config/passport')(passport); // pass passport for configuration
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser.json()); // get information from html forms
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // get information from html forms (parsing incoming request with JSON payloads which you check in chrome devtools network tab)
+app.use(bodyParser.urlencoded({ extended: true })); // (parsing incoming requests with urlencoded payloads that came from the submitted form otherwise req.body will be undefined)
 app.use(express.static('public'))
 
 

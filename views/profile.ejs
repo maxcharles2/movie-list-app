@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>21 Savage Fan Site</title>
+    <title>Movie List Site</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
@@ -10,14 +10,14 @@
 <div class="container">
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <h1 class="gray"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M0 128C0 92.7 28.7 64 64 64l256 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2l0 256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64L416 337.1l0-17.1 0-128 0-17.1 14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg> Movie List Page</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
 
     <div class="row">
 
         <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
+        <!-- <div class="col-sm-6">
             <div class="well">
                 <h3><span class="fa fa-user"></span> Local</h3>
 
@@ -34,27 +34,43 @@
                 <% } %>
 
             </div>
-        </div>
+        </div> -->
         <div class="col-sm-6">
-          <h3>Messages</h3>
-          <ul class="messages">
-          <% for(var i=0; i<messages.length; i++) {%>
-            <li class="message">
-              <span><%= messages[i].name %></span>
-              <span><%= messages[i].msg %></span>
-              <span><%= messages[i].thumbUp %></span>
-              <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-              <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
-              <span><i class="fa fa-trash-o"></i></span>
+          <h3 class="gray">Movies</h3>
+          <ul class="movieListContainer">
+          <% for(var i=0; i<movieList.length; i++) {%>
+            <li class="movieItem" data-id="<%= movieList[i]._id %>"> <%# id stored in data-id attribute %>
+              <span class="gray userName">User: <%= movieList[i].userNameDB %></span>
+              <div>
+                <span class="gray movieName"><%= movieList[i].movieNameDB %> by</span>
+                <span class="gray movieDirector"><%= movieList[i].movieDirectorDB %></span>
+              </div>
+              <span class="gray yearCreated">Year created: <%= movieList[i].yearCreatedDB %></span>
+              <span class="gray movieLength">Movie length: <%= movieList[i].movieLengthDB %></span>
+              <span class="gray watchedMovie">Watched: <%= movieList[i].watchedMovieDB %></span>
+              <span class="gray movieReview">Review: <%= movieList[i].movieReviewDB %></span>
+              <span class="gray thumbUp">Total upvotes: <%= movieList[i].thumbUpDB %></span>
+              <div>
+                <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
+                <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
+                <span><i class="fa fa-trash-o"></i></span>
+              </div>
             </li>
           <% } %>
           </ul>
 
-          <h2>Add a message</h2>
+          <h2 class="gray">Add a movie to the list</h2>
         <% if (user.local.email) { %>
-          <form action="/messages" method="POST">
-            <input type="text" value="<%= user.local.email %>" name="name">
-            <input type="text" placeholder="message" name="msg">
+          <form action="/messages" method="POST" class="movieListForm">
+            <input type="text" placeholder="username" value="<%= user.local.email %>" name="userNameFromForm">
+            <input type="text" placeholder="movie name" name="movieNameFromForm"> <%# movie name %>
+            <input type="text" placeholder="movie director name" name="movieDirectorFromForm" id="">
+            <input type="number" placeholder="year created" name="yearCreatedFromForm" id="">
+            <input type="number" placeholder="movie length" name="movieLengthFromForm" id="">
+            <label for="watchedMovie" class="gray">Have you watched the movie?
+              <input type="checkbox" name="watchedMovieFromForm" value="yes" id="watchedMovie">
+            </label>
+            <input type="text" placeholder="movie review" name="movieReviewFromForm">
             <button type="submit">Submit</button>
           </form>
         </div>

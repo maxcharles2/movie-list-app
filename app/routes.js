@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb'); //importing objectId so it can documents can be searched by id
 module.exports = function(app, passport, db) {
 
 // normal routes ===============================================================
@@ -14,7 +15,7 @@ module.exports = function(app, passport, db) {
           console.log(result);
           res.render('profile.ejs', {
             user : req.user,
-            messages: result
+            movieList: result
           })
         })
     });
@@ -30,7 +31,7 @@ module.exports = function(app, passport, db) {
 // message board routes ===============================================================
 
     app.post('/messages', (req, res) => {
-      db.collection('messages').save({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
+      db.collection('messages').insertOne({userNameDB: req.body.userNameFromForm, movieNameDB: req.body.movieNameFromForm, movieDirectorDB: req.body.movieDirectorFromForm, yearCreatedDB: req.body.yearCreatedFromForm, movieLengthDB: req.body.movieLengthFromForm, watchedMovieDB: req.body.watchedMovieFromForm, movieReviewDB: req.body.movieReviewFromForm, thumbUpDB: 0}, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
         res.redirect('/profile')
@@ -38,14 +39,15 @@ module.exports = function(app, passport, db) {
     })
 
     app.put('/upVote', (req, res) => {
+      const movieId = req.body._id; //receives id from request body
       db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-        $set: {
-          thumbUp:req.body.thumbUp + 1
+      .findOneAndUpdate({ _id: ObjectId(movieId) }, {
+        $inc: {
+          thumbUpDB: 1
         }
       }, {
         sort: {_id: -1},
-        upsert: true
+        upsert: false
       }, (err, result) => {
         if (err) return res.send(err)
         res.send(result)
@@ -53,14 +55,15 @@ module.exports = function(app, passport, db) {
     })
 
     app.put('/downVote', (req, res) => {
+      const movieId = req.body._id; //receives id from request body
       db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-        $set: {
-          thumbUp:req.body.thumbUp - 1
+      .findOneAndUpdate({ _id: ObjectId(movieId) }, {
+        $inc: {
+          thumbUpDB: -1
         }
       }, {
         sort: {_id: -1},
-        upsert: true
+        upsert: false
       }, (err, result) => {
         if (err) return res.send(err)
         res.send(result)
@@ -68,7 +71,8 @@ module.exports = function(app, passport, db) {
     })
 
     app.delete('/messages', (req, res) => {
-      db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
+      const movieId = req.body._id; //receives id from request body
+      db.collection('messages').findOneAndDelete({ _id: ObjectId(movieId) }, (err, result) => {
         if (err) return res.send(500, err)
         console.log(result);
         res.send('Message deleted!')
