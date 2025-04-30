@@ -50,6 +50,10 @@
               <span class="gray watchedMovie">Watched: <%= movieList[i].watchedMovieDB %></span>
               <span class="gray movieReview">Review: <%= movieList[i].movieReviewDB %></span>
               <span class="gray thumbUp">Total upvotes: <%= movieList[i].thumbUpDB %></span>
+              <label for="watchedMovie" class="gray">Have you watched the movie?
+                <input type="checkbox" name="watchedMovieFromForm" class="watchStatusFromInput" id="watchedMovie">
+                <button class="updateWatchStatusBtn">Edit</button>
+              </label>
               <div>
                 <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
                 <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>

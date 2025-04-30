@@ -1,6 +1,7 @@
-var thumbUp = document.getElementsByClassName("fa-thumbs-up");
-var thumbDown = document.getElementsByClassName("fa-thumbs-down")
-var trash = document.getElementsByClassName("fa-trash-o");
+const thumbUp = document.getElementsByClassName("fa-thumbs-up");
+const thumbDown = document.getElementsByClassName("fa-thumbs-down")
+const trash = document.getElementsByClassName("fa-trash-o");
+const updateWatchStatusBtn = document.getElementsByClassName("updateWatchStatusBtn");
 
 Array.from(thumbUp).forEach(function(element) {
       element.addEventListener('click', function(){
@@ -66,6 +67,46 @@ Array.from(thumbDown).forEach(function(element) {
         'watchedMovie': watchedMovieVal,
         'movieReview': movieReviewVal,
         'thumbUp': thumbUpVal
+      })
+    })
+    .then(response => {
+      if (response.ok) return response.json()
+    })
+    .then(data => {
+      console.log(data)
+      window.location.reload(true)
+    })
+  });
+});
+
+Array.from(updateWatchStatusBtn).forEach(function(element) {
+  element.addEventListener('click', function(){
+    const movieItem = this.closest('.movieItem');
+    const userNameVal = movieItem.querySelector('.userName').innerText;
+    const movieNameVal = movieItem.querySelector('.movieName').innerText;
+    const movieDirectorVal = movieItem.querySelector('.movieDirector').innerText;
+    const yearCreatedVal = movieItem.querySelector('.yearCreated').innerText;
+    const movieLengthVal = movieItem.querySelector('.movieLength').innerText;
+    const watchedMovieVal = movieItem.querySelector('.watchedMovie').innerText; //important
+    const newWatchStatusVal = document.querySelector('.watchStatusFromInput').checked;
+    const movieReviewVal = movieItem.querySelector('.movieReview').innerText;
+    const thumbUpText = movieItem.querySelector('.thumbUp').innerText;
+    const thumbUpVal = parseFloat(thumbUpText.replace('Total upvotes: ', '').trim());
+    const movieId = movieItem.getAttribute('data-id'); //stores id in data attribute
+    fetch('watchStatus', {
+      method: 'put',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        '_id': movieId, //id value part of request object getting sent server side
+        'userName': userNameVal,
+        'movieName': movieNameVal,
+        'movieDirector': movieDirectorVal,
+        'yearCreated': yearCreatedVal,
+        'movieLength': movieLengthVal,
+        'watchedMovie': watchedMovieVal,
+        'movieReview': movieReviewVal,
+        'thumbUp': thumbUpVal,
+        'newWatchStatus': newWatchStatusVal
       })
     })
     .then(response => {

@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb'); //importing objectId so it can documents can be searched by id
+const { ObjectId } = require('mongodb'); //importing objectId so documents can be searched by id
 module.exports = function(app, passport, db) {
 
 // normal routes ===============================================================
@@ -60,6 +60,28 @@ module.exports = function(app, passport, db) {
       .findOneAndUpdate({ _id: ObjectId(movieId) }, {
         $inc: {
           thumbUpDB: -1
+        }
+      }, {
+        sort: {_id: -1},
+        upsert: false
+      }, (err, result) => {
+        if (err) return res.send(err)
+        res.send(result)
+      })
+    })
+
+    app.put('/watchStatus', (req, res) => {
+      const movieId = req.body._id; //receives id from request body
+      // let newWatchStatus;
+      // if(req.body.newWatchStatus){
+      //   newWatchStatus = "yes"
+      // } else {
+      //   newWatchStatus = "no"
+      // }
+      db.collection('messages')
+      .findOneAndUpdate({ _id: ObjectId(movieId) }, {
+        $set: {
+          watchedMovieDB: req.body.newWatchStatus === true ? "yes" : "no" //newWatchStatus variable would go here if I used a regular if/else statement
         }
       }, {
         sort: {_id: -1},
